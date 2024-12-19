@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 import asyncio
-from colorama import Fore
+# from colorama import Fore
 import threading as th
 from time import sleep
 from models import processor
@@ -17,7 +17,7 @@ def worker():
         taskid_id = get_first_taskid_id_in_queue()
         if taskid_id:
             task = get_task_info(taskid_id)
-            print(Fore.YELLOW, f'Добавлена задача:\n{task}', Fore.RESET)
+            # print(Fore.YELLOW, f'Добавлена задача:\n{task}', Fore.RESET)
             if task:
                 processor(task)
                 continue
@@ -34,30 +34,30 @@ def init_worker_thread():
 
 
 def complit_task(task_id):
-    print(Fore.RED, "Мы здесь!", Fore.RESET)
+    # print(Fore.RED, "Мы здесь!", Fore.RESET)
 
     task_info = get_task_info(task_id)
-    print(Fore.MAGENTA, task_info, Fore.RESET)
+    # print(Fore.MAGENTA, task_info, Fore.RESET)
 
     user_folder = os.path.join(os.getcwd(), 'data', str(task_info['user_id']))
-    print(Fore.RED, user_folder, Fore.RESET)
+    # print(Fore.RED, user_folder, Fore.RESET)
     task_input_file = os.path.join(user_folder, 'input', task_info['file_name'])
     task_output_file = os.path.join(user_folder, 'output', f'{task_info["file_name"]}.docx')
     if task_info['task_status'] == 'ready':
-        print(Fore.MAGENTA, os.path.exists(task_input_file), Fore.RESET)
+        # print(Fore.MAGENTA, os.path.exists(task_input_file), Fore.RESET)
         if os.path.exists(task_input_file):
             os.remove(task_input_file)
         if os.path.exists(task_output_file):
             os.remove(task_output_file)
 
     elif task_info['task_status'] == 'error' and task_info['task_rem'] != 'Already was puted in queue':
-        print(Fore.MAGENTA, os.path.exists(task_input_file), Fore.RESET)
+        # print(Fore.MAGENTA, os.path.exists(task_input_file), Fore.RESET)
         if os.path.exists(task_input_file):
-            print(Fore.MAGENTA, task_input_file, Fore.RESET)
+            # print(Fore.MAGENTA, task_input_file, Fore.RESET)
             os.remove(task_input_file)
 
         if os.path.exists(task_output_file):
-            print(Fore.MAGENTA, task_output_file, Fore.RESET)
+            # print(Fore.MAGENTA, task_output_file, Fore.RESET)
             os.remove(task_output_file)
 
     set_db_column_value(task_id, 'task_status', "'complited'")
@@ -79,9 +79,9 @@ def on_login(current_user_id):
     current_user_input_folder = os.path.join(current_user_folder, 'input')
     current_user_output_folder = os.path.join(current_user_folder, 'output')
 
-    print(current_user_folder)
-    print(current_user_input_folder)
-    print(current_user_output_folder)
+    # print(current_user_folder)
+    # print(current_user_input_folder)
+    # print(current_user_output_folder)
 
     if not os.path.exists(current_user_folder):
         os.makedirs(current_user_folder)
