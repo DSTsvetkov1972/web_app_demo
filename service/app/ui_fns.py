@@ -62,7 +62,6 @@ def complit_task(task_id):
 
     set_db_column_value(task_id, 'task_status', "'complited'")
 
-    global_vars.needs_to_reload = True
 
     # streamlit_js_eval(js_expressions="parent.window.location.reload()")
 
@@ -127,7 +126,6 @@ async def show_tasks_status():
 
     while True:
         with st.sidebar:
-            # print(f'needs_to_reload {global_vars.needs_to_reload}')
             placeholder = st.empty()
             tasks_ids = get_all_tasks_ids()
             with placeholder.container(border=True):

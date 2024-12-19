@@ -5,7 +5,7 @@ from datetime import datetime
 import os
 import pandas as pd
 from db_fns import set_db_column_value
-import global_vars
+
 #import streamlit as st
 
 def processor(task):
@@ -19,9 +19,8 @@ def processor(task):
      
         set_db_column_value(task_id, "task_status_timestamp", f"'{datetime.now()}'")            
         set_db_column_value(task_id, "start_processing_timestamp", f"'{datetime.now()}'")   
-        set_db_column_value(task_id, "task_progress", "0")      
-        #global_vars.needs_to_reload = True       
-        file_short_name = ".".join(input_file.split('.')[:-1])
+        set_db_column_value(task_id, "task_progress", "0")         
+        # file_short_name = ".".join(input_file.split('.')[:-1])
         df = pd.read_excel(input_file_path, header=None)
 
         document = Document()
@@ -33,14 +32,13 @@ def processor(task):
                 document.add_paragraph(f"{int(row[1])}")
                 set_db_column_value(task_id, 'task_progress', str(step/steps*100))
                 set_db_column_value(task_id, 'task_progress_timestamp', f"'{datetime.now()}'")                
-                print(f'{task_id} {int(step/steps*100)}')                
-        # document.save(os.path.join(os.getcwd(), 'data', f'{user_id}', 'output', f'{file_short_name}.docx'))
+                print(f'Модель обрабоатывает задачу № {task_id} шаг {int(step/steps*100)} из {steps}')                
+
         document.save(os.path.join(os.getcwd(), 'data', f'{user_id}', 'output', f'{input_file}.docx'))        
 
         set_db_column_value(task_id, 'task_progress', '100')  
         set_db_column_value(task_id, "task_status", "'ready'")  
-        #global_vars.needs_to_reload = True
-        print('*'*50, global_vars.needs_to_reload)
+
     except Exception as e:
         set_db_column_value(task_id, "task_status", "'error'")
         e=str(e).replace("'",'"')
@@ -48,9 +46,7 @@ def processor(task):
     finally:
         set_db_column_value(task_id, 'task_progress_timestamp', f"'{datetime.now()}'")          
         print(Fore.GREEN, task, Fore.RESET)
-       # global_vars.needs_to_reload = True
-    #    st.rerun()
-    #input('aaaa')
+
 
 
 
