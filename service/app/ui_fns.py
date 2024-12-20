@@ -27,10 +27,9 @@ def worker():
 
 def init_worker_thread():
     reset_processing_to_queued()
-    if 'worker_thread' not in [thread.name for thread in th.enumerate()]:
-        global_vars.worker_thread = th.Thread(target=worker,
-                                              name='worker_thread')
-        global_vars.worker_thread.start()
+    if 'worker_thread' not in [thread.name for thread in th.enumerate()]:        
+        worker_thread = th.Thread(target=worker, name='worker_thread')
+        worker_thread.start()
 
 
 def complit_task(task_id):
@@ -66,11 +65,18 @@ def complit_task(task_id):
     # streamlit_js_eval(js_expressions="parent.window.location.reload()")
 
 
+#def init_app():
+#    if not global_vars.app_activated:
+#        init_db()
+#        init_worker_thread()
+#        global_vars.app_activated = True
+
 def init_app():
     if not global_vars.app_activated:
         init_db()
         init_worker_thread()
         global_vars.app_activated = True
+
 
 
 def on_login(current_user_id):
