@@ -9,7 +9,7 @@ from db_fns import (init_db, create_user, put_task_in_queue,
                      get_first_taskid_id_in_queue, get_tasks_ids, get_task_info,
                      reset_processing_to_queued, set_db_column_value, get_all_tasks_ids)
 from streamlit_js_eval import streamlit_js_eval
-import global_vars
+# import global_vars
 
 
 def worker():
@@ -26,10 +26,11 @@ def worker():
 
 
 def init_worker_thread():
-    reset_processing_to_queued()
+    
     if 'worker_thread' not in [thread.name for thread in th.enumerate()]:        
         worker_thread = th.Thread(target=worker, name='worker_thread')
         worker_thread.start()
+        reset_processing_to_queued()
 
 
 def complit_task(task_id):
@@ -62,20 +63,11 @@ def complit_task(task_id):
     set_db_column_value(task_id, 'task_status', "'complited'")
 
 
-    # streamlit_js_eval(js_expressions="parent.window.location.reload()")
-
-
-#def init_app():
-#    if not global_vars.app_activated:
-#        init_db()
-#        init_worker_thread()
-#        global_vars.app_activated = True
-
 def init_app():
-    if not global_vars.app_activated:
+    #if not global_vars.app_is_activated:
         init_db()
         init_worker_thread()
-        global_vars.app_activated = True
+        #global_vars.app_activated = True
 
 
 
@@ -142,7 +134,11 @@ async def show_tasks_status():
 
                         st.header(f"**Задача: {task_info['user_id']}"
                                   f"-{task_info['task_id']}**")
+                        
+                        # print(Fore.RED, task_info, Fore.RESET)
+                        
                         if task_info['task_status'] == 'processing':
+                            # print(Fore.CYAN, task_info, Fore.RESET)                            
 
                             if task_info['task_progress']:
                                 st.progress(int(task_info['task_progress']))

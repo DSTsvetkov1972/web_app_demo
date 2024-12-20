@@ -7,6 +7,11 @@ from ui_fns import (init_app, on_login, files_uploader,
 import streamlit as st
 from streamlit_js_eval import streamlit_js_eval
 
+
+#import threading as th
+#for td in [thread.name for thread in th.enumerate()]:
+#    print(td)
+
 init_app()
 
 if "app_restarted" in st.session_state:
@@ -15,7 +20,7 @@ if "app_restarted" in st.session_state:
 if "show_ready" not in st.session_state:
     st.session_state.show_ready = False
 
-current_user_id = 1
+current_user_id = 5
 
 
 if on_login(current_user_id):

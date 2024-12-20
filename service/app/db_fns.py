@@ -31,10 +31,15 @@ def create_user(current_user_id):
 
     with conn:
         cur = conn.cursor()
-        sql = (f"INSERT INTO users "
-               f"(user_id) "
-               f"VALUES ({current_user_id})")
+        sql = (f"SELECT * FROM users WHERE user_id={current_user_id}")
         cur.execute(sql)
+        res = cur.fetchone()
+       
+        if not res: 
+            sql = (f"INSERT INTO users "
+                f"(user_id) "
+                f"VALUES ({current_user_id})")
+            cur.execute(sql)
 
 
 def create_user_messages(user_id, dialog_message, toast_message):
@@ -183,4 +188,4 @@ def reset_processing_to_queued():
 
 
 if __name__ == '__main__':
-    print(get_tasks_ids())
+    create_user(222)

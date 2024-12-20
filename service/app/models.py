@@ -32,7 +32,7 @@ def processor(task):
                 document.add_paragraph(f"{int(row[1])}")
                 set_db_column_value(task_id, 'task_progress', str(step/steps*100))
                 set_db_column_value(task_id, 'task_progress_timestamp', f"'{datetime.now()}'")                
-                print(f'Модель обрабоатывает задачу № {task_id} шаг {int(step/steps*100)} из {steps}')                
+                print(f'Модель обрабоатывает задачу № {user_id}-{task_id} шаг {(step)} из {steps}')                
 
         document.save(os.path.join(os.getcwd(), 'data', f'{user_id}', 'output', f'{input_file}.docx'))        
 
