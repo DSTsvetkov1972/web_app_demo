@@ -89,10 +89,10 @@ def on_login(current_user_id):
         os.makedirs(current_user_output_folder)
 
     create_user(current_user_id)
-    with st.sidebar:
-        st.write("**Пользователь:**")
-        st.text_input("Оператор:", current_user_id, disabled=True, label_visibility='collapsed')
-        st.button('Выйти из аккаунта', disabled=True, use_container_width=True)
+    #with st.sidebar:
+        #st.write("**Пользователь:**")
+        #st.text_input("Оператор:", current_user_id, disabled=True, label_visibility='collapsed')
+        #st.button('Выйти из аккаунта', disabled=True, use_container_width=True)
 
     return True
 
@@ -117,7 +117,7 @@ def files_uploader(user_id):
                     else:
                         put_task_in_queue(user_id, file_name, task_status='error')
 
-                streamlit_js_eval(js_expressions="parent.window.location.reload()")
+                # streamlit_js_eval(js_expressions="parent.window.location.reload()")
 
 
 async def show_tasks_status():
