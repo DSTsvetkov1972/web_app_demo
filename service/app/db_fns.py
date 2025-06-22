@@ -1,7 +1,7 @@
 import sqlite3
 import os
 from datetime import datetime
-# from colorama import Fore
+from colorama import Fore
 
 
 def init_db():
@@ -10,7 +10,7 @@ def init_db():
         cur = conn.cursor()
         cur.execute("CREATE TABLE IF NOT EXISTS  tasks"
                     "    (task_id INT, "
-                    "    user_id INT, "
+                    "    user_id TEXT, "
                     "    file_name TEXT, "
                     "    task_timestamp TEXT, "
                     "    start_processing_timestamp TEXT, "
@@ -20,7 +20,7 @@ def init_db():
                     "    task_status_timestamp TEXT, "
                     "    task_rem TEXT)")
         cur.execute("CREATE TABLE IF NOT EXISTS users"
-                    "    (user_id INT, "
+                    "    (user_id TEXT, "
                     "    user_id_timestamp TEXT, "
                     "    dialog_message TEXT, "
                     "    toast_message TEXT)")
@@ -31,14 +31,14 @@ def create_user(current_user_id):
 
     with conn:
         cur = conn.cursor()
-        sql = (f"SELECT * FROM users WHERE user_id={current_user_id}")
+        sql = (f"SELECT * FROM users WHERE user_id='{current_user_id}'")
         cur.execute(sql)
         res = cur.fetchone()
        
         if not res: 
             sql = (f"INSERT INTO users "
                 f"(user_id) "
-                f"VALUES ({current_user_id})")
+                f"VALUES ('{current_user_id}')")
             cur.execute(sql)
 
 
@@ -48,7 +48,7 @@ def create_user_messages(user_id, dialog_message, toast_message):
         cur = conn.cursor()
         dialog_message = str(dialog_message).replace("'", '"')
         toast_message = str(toast_message).replace("'", '"')
-        sql = f"UPDATE users SET dialog_message ='{dialog_message}', toast_message ='{toast_message}' WHERE user_id={user_id}"
+        sql = f"UPDATE users SET dialog_message ='{dialog_message}', toast_message ='{toast_message}' WHERE user_id='{user_id}'"
         cur.execute(sql)
 
 
@@ -59,7 +59,7 @@ def get_user_messages(current_user_id):
         cur = conn.cursor()
         sql = (f"SELECT dialog_message, toast_message "
                f"FROM users "
-               f"WHERE user_id = {current_user_id}")
+               f"WHERE user_id = '{current_user_id}'")
         res = cur.execute(sql).fetchall()[0]
     return res
 
@@ -76,6 +76,7 @@ def put_task_in_queue(user_id, file_name, task_status='queued'):
             max_task_id = res
         else:
             max_task_id = 0
+
         if task_status == 'queued':
             sql = (f"INSERT INTO tasks "
                    f"    (task_id,"
@@ -85,7 +86,7 @@ def put_task_in_queue(user_id, file_name, task_status='queued'):
                    f"    task_status,"
                    f"    task_status_timestamp)"
                    f"VALUES "
-                   f"    ({max_task_id+1}, {user_id}, '{file_name}', '{datetime.now()}','queued', '{datetime.now()}')")
+                   f"    ({max_task_id+1}, '{user_id}', '{file_name}', '{datetime.now()}','queued', '{datetime.now()}')")
         else:
             sql = (f"INSERT INTO tasks "
                    f"    (task_id,"
@@ -98,7 +99,7 @@ def put_task_in_queue(user_id, file_name, task_status='queued'):
                    f"    task_status_timestamp,"
                    f"    task_rem)"
                    f"VALUES "
-                   f"    ({max_task_id+1}, {user_id}, '{file_name}', '{datetime.now()}', '{datetime.now()}', "
+                   f"    ({max_task_id+1}, '{user_id}', '{file_name}', '{datetime.now()}', '{datetime.now()}', "
                    f"    '{datetime.now()}', 'error', '{datetime.now()}',  'Already was puted in queue')")
         cur.execute(sql)
 
@@ -108,9 +109,9 @@ def get_tasks_ids(user_id, task_statuses=None):
     with conn:
         cur = conn.cursor()
         if task_statuses:
-            sql = f"SELECT task_id FROM tasks WHERE user_id={user_id} AND task_status IN ({task_statuses}) ORDER BY task_id DESC"
+            sql = f"SELECT task_id FROM tasks WHERE user_id='{user_id}' AND task_status IN ({task_statuses}) ORDER BY task_id DESC"
         else:
-            sql = f"SELECT task_id FROM tasks WHERE user_id={user_id}  ORDER BY task_id DESC"
+            sql = f"SELECT task_id FROM tasks WHERE user_id='{user_id}'  ORDER BY task_id DESC"
         cur.execute(sql)
         res = cur.fetchall()
     if res:
@@ -150,7 +151,6 @@ def get_task_info(task_id):
     with conn:
         cur = conn.cursor()
         sql = f"SELECT * FROM tasks WHERE task_id = {task_id}"
-        # print(Fore.RED, sql, Fore.RESET)
         cur.execute(sql)
         res = cur.fetchall()
 

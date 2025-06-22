@@ -20,7 +20,7 @@ if "app_restarted" in st.session_state:
 if "show_ready" not in st.session_state:
     st.session_state.show_ready = False
 
-current_user_id =1
+current_user_id ='kostya'
 
 
 if on_login(current_user_id):

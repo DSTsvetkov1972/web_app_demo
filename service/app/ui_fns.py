@@ -90,7 +90,7 @@ def on_login(current_user_id):
 
     create_user(current_user_id)
     with st.sidebar:
-        st.write("**Оператор:**")
+        st.write("**Пользователь:**")
         st.text_input("Оператор:", current_user_id, disabled=True, label_visibility='collapsed')
         st.button('Выйти из аккаунта', disabled=True, use_container_width=True)
 
